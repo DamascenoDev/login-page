@@ -11,33 +11,40 @@ import { Router } from '@angular/router';
 import { LoginService } from '../../services/login.service';
 import { ToastrService } from 'ngx-toastr';
 
-interface LoginForm {
+interface RegisterForm {
+  name: FormControl;
   email: FormControl;
   password: FormControl;
+  passwordConfirm: FormControl;
 }
 
 @Component({
-  selector: 'app-login',
+  selector: 'app-register',
   imports: [
     DefaultLoginLayoutComponent,
     ReactiveFormsModule,
     PrimaryInputComponent,
   ],
   providers: [LoginService],
-  templateUrl: './login.component.html',
-  styleUrl: './login.component.scss',
+  templateUrl: './register.component.html',
+  styleUrl: './register.component.scss',
 })
-export class LoginComponent {
-  loginForm!: FormGroup<LoginForm>;
+export class RegisterComponent {
+  registerForm!: FormGroup<RegisterForm>;
 
   constructor(
     private router: Router,
     private loginService: LoginService,
     private toastService: ToastrService
   ) {
-    this.loginForm = new FormGroup({
+    this.registerForm = new FormGroup({
+      name: new FormControl('', [Validators.required, Validators.minLength(3)]),
       email: new FormControl('', [Validators.required, Validators.email]),
       password: new FormControl('', [
+        Validators.required,
+        Validators.minLength(6),
+      ]),
+      passwordConfirm: new FormControl('', [
         Validators.required,
         Validators.minLength(6),
       ]),
@@ -45,13 +52,13 @@ export class LoginComponent {
   }
 
   submit() {
-    this.loginService.login(this.loginForm.value.email, this.loginForm.value.password).subscribe({
+    this.loginService.login(this.registerForm.value.email, this.registerForm.value.password).subscribe({
       next: () => this.toastService.success('Login successful!'),
       error: () => this.toastService.error('Login failed!')
     })
   }
 
   navigate() {
-    this.router.navigate(['register']);
+    this.router.navigate(['login']);
   }
 }
