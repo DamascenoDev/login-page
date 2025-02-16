@@ -52,7 +52,7 @@ export class RegisterComponent {
   }
 
   submit() {
-    this.loginService.login(this.registerForm.value.email, this.registerForm.value.password).subscribe({
+    this.loginService.register(this.registerForm.value.name, this.registerForm.value.email, this.registerForm.value.password).subscribe({
       next: () => this.toastService.success('Login successful!'),
       error: () => this.toastService.error('Login failed!')
     })
